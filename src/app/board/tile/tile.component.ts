@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { first } from 'rxjs';
 import { Tile } from '../tile';
 
 @Component({
@@ -8,10 +9,13 @@ import { Tile } from '../tile';
 })
 export class TileComponent implements OnInit {
 @Input() tile: Tile = {rail: [], road: []};
-
+@Output() turnTile: EventEmitter<Tile> = new EventEmitter();
   constructor() {}
 
   ngOnInit(): void {
   }
 
+  turn(){
+    this.turnTile.emit(this.tile)
+  }
 }

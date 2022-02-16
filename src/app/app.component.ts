@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Tile } from './tile/tile';
+import { Tile } from './board/tile';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +8,4 @@ import { Tile } from './tile/tile';
 })
 export class AppComponent {
   title = 'kolejowy-szlak';
-  tile: Tile = {
-    road: [true, true, true, true],
-    rail: [false, false, false, false]
-  };
 }

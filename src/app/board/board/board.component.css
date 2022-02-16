@@ -1,0 +1,5 @@
+.board {
+    display: grid;
+    grid-template-columns: repeat(7, 5em);
+    grid-template-rows: repeat(7, 5em);
+}

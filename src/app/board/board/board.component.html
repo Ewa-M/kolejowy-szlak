@@ -1,0 +1,8 @@
+
+<div>
+    <div class="board">
+        <div *ngFor="let tile  of board | flatten">
+            <app-tile [tile]="tile" (turnTile)="turn(tile)" ></app-tile>
+        </div>
+    </div>
+</div>
