@@ -1,8 +1,43 @@
 
-<div>
+  
+<div cdkDropListGroup class="ui"> 
+
+    <div cdkDropList cdkDropListSortingDisabled="true" [cdkDropListData]="intersections" class="side-panel" (cdkDropListDropped)="drop($event)">
+        <app-tile  *ngFor="let tile  of intersections"  cdkDrag  [tile]="tile" [color]="'blue'" (turnTile)="turn(tile)"  ></app-tile>
+    </div>
+
     <div class="board">
-        <div *ngFor="let tile  of board | flatten">
-            <app-tile [tile]="tile" (turnTile)="turn(tile)" ></app-tile>
+        <div class="vertical vroad v-upper v-left"></div>
+        <div class="vertical vrail v-upper v-middle"></div>
+        <div class="vertical vroad v-upper v-right"></div>
+        
+        <div class="vertical vroad v-lower v-left"></div>
+        <div class="vertical vrail v-lower v-middle"></div>
+        <div class="vertical vroad v-lower v-right"></div>
+
+        <div class="horizontal hrail h-left h-top"></div>
+        <div class="horizontal hroad h-left h-middle"></div>
+        <div class="horizontal hrail h-left h-bottom"></div>
+
+        <div class="horizontal hrail h-right h-top"></div>
+        <div class="horizontal hroad h-right h-middle"></div>
+        <div class="horizontal hrail h-right h-bottom"></div>
+
+        <div class="main-board" >
+            <div *ngFor="let tile  of placed" [ngStyle]="{'grid-column': tile.x, 'grid-row': tile.y}">
+                <app-tile  cdkDrag [tile]="tile" (turnTile)="turn(tile)"></app-tile>
+            </div>
+    
+            <div *ngFor="let tile  of freeSpace"
+             cdkDropList  (cdkDropListDropped)="drop($event)"   [cdkDropListData]=tile 
+             [ngStyle]="{'grid-column': tile[0].x, 'grid-row': tile[0].y}" >
+                <app-tile [tile]="tile[0]" cdkDrag [cdkDragDisabled]="tile[0].isEmpty" [color]="'blue'" (turnTile)="turn(tile[0])"></app-tile>
+            </div>
         </div>
+
+    </div>
+
+    <div cdkDropList cdkDropListSortingDisabled="true" [cdkDropListData]="toAdd" class="side-panel" (cdkDropListDropped)="drop($event)">
+        <app-tile  *ngFor="let tile  of toAdd"  cdkDrag  [tile]="tile" [color]="'blue'" (turnTile)="turn(tile)"  ></app-tile>
     </div>
 </div>

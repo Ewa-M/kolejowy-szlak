@@ -1,5 +1,78 @@
-.board {
+.ui {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-around;
+    flex-direction: row;
+    background-color: pink;
+    width: 100vw;
+    padding: 2em 0em;
+}
+
+.main-board {
     display: grid;
     grid-template-columns: repeat(7, 5em);
     grid-template-rows: repeat(7, 5em);
+    width: 35em;
+    height: 35em;
+    background-color: rgba(255, 255, 255, 0.418);
+    grid-area: board;
 }
+
+.board {
+    display: grid;
+    grid-template-columns: 1.875em [board-start] repeat(7, 5em) [board-end] 1.875em;
+    grid-template-rows: 1.875em [board-start] repeat(7, 5em) [board-end] 1.875em;
+    background-color: yellow;
+    align-items: center;
+    justify-content: center;
+}
+
+.v-upper {
+    grid-row: 1; 
+    width: 18.75%;
+    align-self: center;
+    justify-self: center;
+    }
+
+.v-lower {
+    grid-row: 9; 
+    width: 18.75%;
+    align-self: center;
+    justify-self: center;
+    }
+
+.v-left { grid-column: 3;}
+.v-middle { grid-column: 5;}
+.v-right {grid-column: 7;}
+
+.h-left {
+    grid-column: 1; 
+    height: 18.75%;
+    align-self: center;
+    justify-self: center;
+    }
+
+.h-right {
+    grid-column: 9; 
+    height: 18.75%;
+    align-self: center;
+    justify-self: center;
+    }
+
+.h-top { grid-row: 3;}
+.h-middle { grid-row: 5;}
+.h-bottom {grid-row: 7;}
+
+
+.side-panel {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+  

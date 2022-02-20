@@ -1,14 +1,14 @@
-<div class="wrapper">
+<div class="wrapper" [ngStyle]="{ 'opacity': tile.isEmpty ? '0' : '1'}" [style.--color]="color" >
     <div class="middle"></div>
-
+    
     <div *ngIf="tile.rail[0]" class="upper vertical vrail"></div>
     <div *ngIf="tile.rail[1]" class="right horizontal hrail"></div>
     <div *ngIf="tile.rail[2]" class="lower vertical vrail"></div>
     <div *ngIf="tile.rail[3]" class="left horizontal hrail"></div>
 
-    <div *ngIf="tile.road[0]" class="upper vertical road vroad"></div>
-    <div *ngIf="tile.road[1]" class="right horizontal road hroad"></div>
-    <div *ngIf="tile.road[2]" class="lower vertical road vroad"></div>
-    <div *ngIf="tile.road[3]" class="left horizontal road hroad"></div>
-    <div class="turn" (click)="turn()">⟳</div>
+    <div *ngIf="tile.road[0]" class="upper vertical vroad"></div>
+    <div *ngIf="tile.road[1]" class="right horizontal hroad"></div>
+    <div *ngIf="tile.road[2]" class="lower vertical vroad"></div>
+    <div *ngIf="tile.road[3]" class="left horizontal hroad"></div>
+    <div *ngIf="!tile.isEmpty" class="turn" (click)="turn()">⟳</div>
 </div>

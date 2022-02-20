@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { Component, Input, OnInit } from '@angular/core';
 import { Tile } from 'src/app/board/tile';
+import { INTERSECTIONS } from '../INTERSECTIONS';
 
 @Component({
   selector: 'app-board',
@@ -7,37 +9,63 @@ import { Tile } from 'src/app/board/tile';
   styleUrls: ['./board.component.css']
 })
 export class BoardComponent implements OnInit {
-  tile: Tile = {
-    road: [true, true, false, false],
-    rail: [false, false, true, false]
-  };
-  board: Tile[][] = [];
+  @Input() toAdd: Tile[] = [];
+  intersections: Tile[] = INTERSECTIONS;
+  placed: Tile[] = [];
+  freeSpace: Tile[][] = [];
+
   constructor() { }
 
   ngOnInit(): void {
-    const emptyTile: Tile = {
-      road: [false, false, false, false],
-      rail: [false, false, false, false]
-    };
 
+    
     for(let i=0; i<7; i++) {
-      this.board.push([])
       for(let j=0; j<7; j++) {
-        this.board[i].push(emptyTile);
+        this.freeSpace.push(
+          [{
+            road: [false, false, false, false],
+            rail: [false, false, false, false],
+            id: i +""+ j,
+            x: i+1,
+            y: j+1,
+            isEmpty: true
+          }]
+        );
       }
     }
 
   }
+  
+  drop(event: CdkDragDrop<Tile[]>) {
+    console.log(event.previousContainer.data[event.previousIndex])
+    console.log(event.container.data[event.currentIndex])
 
-  turn(tile:Tile) {
-    let firstroad = tile.road[3]
-    let firstrail = tile.rail[3]
-    for(let i = 2; i>=0; i--) {
-      tile.road[i+1] = tile.road[i];
-      tile.rail[i+1] = tile.rail[i];
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      event.previousContainer.data[event.previousIndex].x = event.container.data[event.currentIndex].x
+      event.previousContainer.data[event.previousIndex].y = event.container.data[event.currentIndex].y
+      event.container.data.unshift(event.previousContainer.data[event.previousIndex])
+      event.previousContainer.data.splice(event.previousIndex, 1);
     }
-    tile.road[0] = firstroad;
-    tile.rail[0] = firstrail;
+  }
+
+    //////////////////////
+  turn(tile:Tile) {
+    console.log(tile)
+    let index = this.toAdd.findIndex(e => e.id == tile.id)
+    console.log(index)
+    let tile2: Tile = this.toAdd[index];
+    if (tile2) {
+      let firstroad = tile2.road[3]
+      let firstrail = tile2.rail[3]
+      for(let i = 2; i>=0; i--) {
+        tile2.road[i+1] = tile2.road[i];
+        tile2.rail[i+1] = tile2.rail[i];
+      }
+      tile2.road[0] = firstroad;
+      tile2.rail[0] = firstrail;
+    }
   }
 
 }
