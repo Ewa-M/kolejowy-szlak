@@ -1,6 +1,7 @@
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { trigger } from '@angular/animations';
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit } from '@angular/core';
-import { Tile } from 'src/app/board/tile';
+import { connected, Tile } from 'src/app/board/tile';
 import { INTERSECTIONS } from '../INTERSECTIONS';
 
 @Component({
@@ -9,7 +10,7 @@ import { INTERSECTIONS } from '../INTERSECTIONS';
   styleUrls: ['./board.component.css']
 })
 export class BoardComponent implements OnInit {
-  @Input() toAdd: Tile[] = [];
+  @Input() dice: Tile[] = [];
   intersections: Tile[] = INTERSECTIONS;
   placed: Tile[] = [];
   freeSpace: Tile[][] = [];
@@ -18,7 +19,8 @@ export class BoardComponent implements OnInit {
 
   ngOnInit(): void {
 
-    
+    this.placed = [];
+
     for(let i=0; i<7; i++) {
       for(let j=0; j<7; j++) {
         this.freeSpace.push(
@@ -30,16 +32,12 @@ export class BoardComponent implements OnInit {
             y: j+1,
             isEmpty: true
           }]
-        );
-      }
-    }
-
+        );}}
   }
-  
-  drop(event: CdkDragDrop<Tile[]>) {
-    console.log(event.previousContainer.data[event.previousIndex])
-    console.log(event.container.data[event.currentIndex])
 
+
+  drop(event: CdkDragDrop<Tile[]>) {
+    console.log(event.container.data[event.currentIndex])
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -50,12 +48,56 @@ export class BoardComponent implements OnInit {
     }
   }
 
+  fitsOnBoard(tile: Tile) {
+    for (const t of this.placed) {
+      if (connected(t, tile)) return true;
+    }
+
+    for (let t of this.freeSpace) {
+      if (!t[0].isEmpty && connected(t[0], tile)) return true;
+    }
+
+    if (tile.x == 2 || tile.x == 6) {
+      if(tile.y==1 && tile.road[0]) return true;
+      if(tile.y==7 && tile.road[2]) return true;
+    }
+
+    if (tile.x == 4) {
+      if(tile.y==1 && tile.rail[0]) return true;
+      if(tile.y==7 && tile.rail[2]) return true;
+    }
+
+    if(tile.y == 2 || tile.y == 6) {
+      if(tile.x==1 && tile.rail[3]) return true;
+      if(tile.x==7 && tile.rail[1]) return true;
+    }
+
+    if(tile.y == 4) {
+      if(tile.x==1 && tile.road[3]) return true;
+      if(tile.x==7 && tile.road[1]) return true;
+    }
+
+   return false; 
+  }
+
+  
+  boardPredicate(drag: CdkDrag<Tile>, drop: CdkDropList<Tile[]>) {
+    return drop.data.length == 1
+  }
+
+  dicePredicate(drag: CdkDrag<Tile>, drop: CdkDropList<Tile[]>) {
+    return !/intersection/.test(drag.data.id)
+  }
+
+  intersectionsPredicate(drag: CdkDrag<any>, drop: CdkDropList<Tile[]>) {
+    return /intersection/.test(drag.data.id)
+  }
     //////////////////////
   turn(tile:Tile) {
     console.log(tile)
-    let index = this.toAdd.findIndex(e => e.id == tile.id)
+    let index = this.dice.findIndex(e => e.id == tile.id)
     console.log(index)
-    let tile2: Tile = this.toAdd[index];
+    let tile2: Tile = this.dice[index];
     if (tile2) {
       let firstroad = tile2.road[3]
       let firstrail = tile2.rail[3]
@@ -66,6 +108,10 @@ export class BoardComponent implements OnInit {
       tile2.road[0] = firstroad;
       tile2.rail[0] = firstrail;
     }
+  }
+
+  newRound() {
+    
   }
 
 }

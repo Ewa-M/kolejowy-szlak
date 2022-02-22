@@ -1,0 +1,6 @@
+TODO: wiadukty :c zarowno wyswietlanie jak i oznaczenie
+TODO: dodawanie tylko jednego skrzyżowania na turę? nwm moze potem
+TODO: konczenie rundy
+    - guzik konczacy
+    - walidacja ukladu
+    - przeniesc dice do service'u

@@ -2,8 +2,13 @@
   
 <div cdkDropListGroup class="ui"> 
 
-    <div cdkDropList cdkDropListSortingDisabled="true" [cdkDropListData]="intersections" class="side-panel" (cdkDropListDropped)="drop($event)">
-        <app-tile  *ngFor="let tile  of intersections"  cdkDrag  [tile]="tile" [color]="'blue'" (turnTile)="turn(tile)"  ></app-tile>
+    <div cdkDropList 
+        cdkDropListSortingDisabled="true" 
+        [cdkDropListData]="intersections" 
+        [cdkDropListEnterPredicate]="intersectionsPredicate"
+        class="side-panel"
+        (cdkDropListDropped)="drop($event)">
+        <app-tile  *ngFor="let tile  of intersections"  cdkDrag [cdkDragData]="tile" [tile]="tile" [color]="'blue'" (turnTile)="turn(tile)"  ></app-tile>
     </div>
 
     <div class="board">
@@ -24,20 +29,32 @@
         <div class="horizontal hrail h-right h-bottom"></div>
 
         <div class="main-board" >
-            <div *ngFor="let tile  of placed" [ngStyle]="{'grid-column': tile.x, 'grid-row': tile.y}">
+            <div *ngFor="let tile  of placed" 
+                [ngStyle]="{'grid-column': tile.x, 'grid-row': tile.y}">
                 <app-tile  cdkDrag [tile]="tile" (turnTile)="turn(tile)"></app-tile>
             </div>
     
             <div *ngFor="let tile  of freeSpace"
-             cdkDropList  (cdkDropListDropped)="drop($event)"   [cdkDropListData]=tile 
-             [ngStyle]="{'grid-column': tile[0].x, 'grid-row': tile[0].y}" >
-                <app-tile [tile]="tile[0]" cdkDrag [cdkDragDisabled]="tile[0].isEmpty" [color]="'blue'" (turnTile)="turn(tile[0])"></app-tile>
+                cdkDropList 
+                (cdkDropListDropped)="drop($event)"   
+                [cdkDropListData]="tile" 
+                [cdkDropListEnterPredicate]="boardPredicate"
+                [ngStyle]="{'grid-column': tile[0].x, 'grid-row': tile[0].y}" >
+                    <app-tile [tile]="tile[0]" cdkDrag [cdkDragData]="tile[0]" [cdkDragDisabled]="tile[0].isEmpty" [color]="'blue'" (turnTile)="turn(tile[0])"></app-tile>
             </div>
         </div>
 
     </div>
 
-    <div cdkDropList cdkDropListSortingDisabled="true" [cdkDropListData]="toAdd" class="side-panel" (cdkDropListDropped)="drop($event)">
-        <app-tile  *ngFor="let tile  of toAdd"  cdkDrag  [tile]="tile" [color]="'blue'" (turnTile)="turn(tile)"  ></app-tile>
+    <div class="side-panel"
+        cdkDropList 
+        cdkDropListSortingDisabled="true" 
+        [cdkDropListData]="dice"
+        [cdkDropListEnterPredicate]="dicePredicate"
+        (cdkDropListDropped)="drop($event)">
+        <app-tile  *ngFor="let tile  of dice"  cdkDrag [cdkDragData]="tile" [tile]="tile" [color]="'blue'" (turnTile)="turn(tile)"  ></app-tile>
+
+
+        <button (click)="newRound()">FINISH ROUND</button>
     </div>
 </div>
