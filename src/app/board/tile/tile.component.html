@@ -1,5 +1,13 @@
 <div class="wrapper" [ngStyle]="{ 'opacity': tile.isEmpty ? '0' : '1'}" [style.--color]="color" >
-    <div class="middle"></div>
+    <div class="middle" 
+    [ngClass]="{
+        'vertical': tile.middle,
+        'mid-rail': tile.middle == 'hrail' || tile.middle == 'vrail', 
+        'vrail': tile.middle == 'hrail' || tile.middle == 'vrail', 
+        'mid-road': tile.middle == 'hroad' || tile.middle == 'vroad',
+        'vroad': tile.middle == 'hroad' || tile.middle == 'vroad',
+        'mid-horizontal': tile.middle == 'hroad' || tile.middle == 'hrail'
+    }"></div>
     
     <div *ngIf="tile.rail[0]" class="upper vertical vrail"></div>
     <div *ngIf="tile.rail[1]" class="right horizontal hrail"></div>

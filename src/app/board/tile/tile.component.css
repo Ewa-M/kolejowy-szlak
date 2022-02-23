@@ -5,8 +5,8 @@
     height: 5rem;
     background-color: rgba(255, 255, 255, 0.5);
     display: grid;
-    grid-template-columns: 1fr 25% 1fr;
-    grid-template-rows: 1fr 25% 1fr;
+    grid-template-columns: 1fr 18.75% 1fr;
+    grid-template-rows: 1fr 18.75% 1fr;
     grid-template-areas: 
     ". upper ."
     "left middle right"
@@ -29,14 +29,30 @@
     user-select: none;
 }
 
-.middle {
-    background-color: var(--color);
-    grid-area: middle;
-    width: 100%;
-    height: 100%;
-}
-
 .upper {grid-area: upper;}
 .lower {grid-area: lower;}
 .left {grid-area: left;}
 .right{grid-area: right;}
+
+.middle {
+    background-color: var(--color);
+    grid-area: middle;
+    width: calc(100% + 0.3rem);
+    height: calc(100% + 0.3rem);
+}
+
+.mid-rail {
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+}
+
+.mid-road {
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+}
+
+.mid-horizontal {
+    transform: rotate(90deg);
+}

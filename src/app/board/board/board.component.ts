@@ -1,8 +1,9 @@
 import { trigger } from '@angular/animations';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit } from '@angular/core';
-import { connected, Tile } from 'src/app/board/tile';
-import { INTERSECTIONS } from '../INTERSECTIONS';
+import { Subscription } from 'rxjs';
+import { connected, fitsOnBoard, fitsWithEntry, Intersections, Tile, turn, validateBoard } from 'src/app/board/tile';
+import { DiceService } from 'src/app/services/dice.service';
 
 @Component({
   selector: 'app-board',
@@ -10,12 +11,16 @@ import { INTERSECTIONS } from '../INTERSECTIONS';
   styleUrls: ['./board.component.css']
 })
 export class BoardComponent implements OnInit {
-  @Input() dice: Tile[] = [];
-  intersections: Tile[] = INTERSECTIONS;
+  dice: Tile[] = [];
+  intersections: Tile[] = Intersections;
   placed: Tile[] = [];
   freeSpace: Tile[][] = [];
+  diceSubscription: Subscription;
 
-  constructor() { }
+  constructor(private diceService: DiceService) { 
+    this.diceSubscription = this.diceService.makeBoard().subscribe(value => this.placed = value);
+    this.dice = this.diceService.throwDice();
+  }
 
   ngOnInit(): void {
 
@@ -37,7 +42,6 @@ export class BoardComponent implements OnInit {
 
 
   drop(event: CdkDragDrop<Tile[]>) {
-    console.log(event.container.data[event.currentIndex])
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -46,38 +50,6 @@ export class BoardComponent implements OnInit {
       event.container.data.unshift(event.previousContainer.data[event.previousIndex])
       event.previousContainer.data.splice(event.previousIndex, 1);
     }
-  }
-
-  fitsOnBoard(tile: Tile) {
-    for (const t of this.placed) {
-      if (connected(t, tile)) return true;
-    }
-
-    for (let t of this.freeSpace) {
-      if (!t[0].isEmpty && connected(t[0], tile)) return true;
-    }
-
-    if (tile.x == 2 || tile.x == 6) {
-      if(tile.y==1 && tile.road[0]) return true;
-      if(tile.y==7 && tile.road[2]) return true;
-    }
-
-    if (tile.x == 4) {
-      if(tile.y==1 && tile.rail[0]) return true;
-      if(tile.y==7 && tile.rail[2]) return true;
-    }
-
-    if(tile.y == 2 || tile.y == 6) {
-      if(tile.x==1 && tile.rail[3]) return true;
-      if(tile.x==7 && tile.rail[1]) return true;
-    }
-
-    if(tile.y == 4) {
-      if(tile.x==1 && tile.road[3]) return true;
-      if(tile.x==7 && tile.road[1]) return true;
-    }
-
-   return false; 
   }
 
   
@@ -93,25 +65,82 @@ export class BoardComponent implements OnInit {
     return /intersection/.test(drag.data.id)
   }
     //////////////////////
-  turn(tile:Tile) {
-    console.log(tile)
+
+
+
+  turnDice(tile:Tile) {
     let index = this.dice.findIndex(e => e.id == tile.id)
-    console.log(index)
     let tile2: Tile = this.dice[index];
     if (tile2) {
-      let firstroad = tile2.road[3]
-      let firstrail = tile2.rail[3]
-      for(let i = 2; i>=0; i--) {
-        tile2.road[i+1] = tile2.road[i];
-        tile2.rail[i+1] = tile2.rail[i];
+      tile2 = turn(tile2);
+    }
+  }
+
+  turnBoard(tile:Tile) {
+    let index = this.freeSpace.findIndex(e => e[0].id == tile.id)
+    let tile2: Tile = this.freeSpace[index][0];
+    if (tile2) {
+      tile2 = turn(tile2);
+    }
+  }
+
+  turnIntersection(tile:Tile) {
+    let index = this.intersections.findIndex(e => e.id == tile.id)
+    let tile2: Tile = this.intersections[index];
+    if (tile2) {
+      tile2 = turn(tile2);
+    }
+  }
+
+  validOnBoard(toCheck: Tile[]): Tile[] {
+
+  let valid : Tile[] = [];
+  let invalid: Tile[] = [];
+
+    for(let tile of toCheck){
+      if (fitsWithEntry(tile) || fitsOnBoard(tile, this.placed)) valid.push(tile)
+      else invalid.push(tile)
+    }
+
+    return valid.concat(validateBoard(invalid, valid)); 
+  }
+
+  validCheck(toCheck: Tile[]): boolean {
+
+    const newInterections = toCheck.filter(x => /intersection/.test(x.id))
+    if (newInterections.length > 1) {
+      this.freeSpace = this.freeSpace.filter(x => x.length == 1 || !/intersection/.test(x[0].id))
+      this.intersections.push(...newInterections)
+      return false;
+    }
+
+    const valid = this.validOnBoard(toCheck);
+    
+    if  (toCheck.length == valid.length) {
+      return true;
+    } else {
+      const invalid = toCheck.filter(x => !valid.includes(x))
+      for (let t of this.freeSpace) {
+        if (invalid.includes(t[0])) {
+          this.dice.push(t[0])
+          t.shift()
+        }
       }
-      tile2.road[0] = firstroad;
-      tile2.rail[0] = firstrail;
+      return false;
     }
   }
 
   newRound() {
-    
+    let toCheck =  this.freeSpace
+      .filter(x => x.length == 2)
+      .map(x => x[0])
+      .filter(x => !x.isEmpty);
+
+    if (this.dice.length == 0 && this.validCheck(toCheck)) {
+      this.freeSpace = this.freeSpace.filter(x => x.length == 1)
+      this.dice = this.diceService.throwDice();
+      this.diceService.finishRound(toCheck)
+    }
   }
 
 }

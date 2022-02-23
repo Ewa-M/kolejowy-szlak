@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DiceServiceService } from './dice-service.service';
+import { DiceService } from './dice.service';
 
-describe('DiceServiceService', () => {
-  let service: DiceServiceService;
+describe('DiceService', () => {
+  let service: DiceService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DiceServiceService);
+    service = TestBed.inject(DiceService);
   });
 
   it('should be created', () => {
