@@ -11,6 +11,8 @@ export class TileComponent implements OnInit {
 @Input() tile: Tile = {rail: [], road: [], id: ""};
 @Input() color: string ='black';
 @Output() turnTile: EventEmitter<Tile> = new EventEmitter();
+@Output() sidesTile: EventEmitter<Tile> = new EventEmitter();
+
   constructor() {}
 
   ngOnInit(): void {
@@ -18,5 +20,8 @@ export class TileComponent implements OnInit {
 
   turn(){
     this.turnTile.emit(this.tile)
+  }
+  sides() {
+    this.sidesTile.emit(this.tile)
   }
 }

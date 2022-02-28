@@ -2,7 +2,7 @@ import { trigger } from '@angular/animations';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { connected, fitsOnBoard, fitsWithEntry, Intersections, Tile, turn, validateBoard } from 'src/app/board/tile';
+import { connected, fitsOnBoard, fitsWithEntry, Intersections, sides, Tile, turn, validateBoard } from 'src/app/board/tile';
 import { DiceService } from 'src/app/services/dice.service';
 
 @Component({
@@ -24,7 +24,7 @@ export class BoardComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.placed = [];
+    this.placed = []; 
 
     for(let i=0; i<7; i++) {
       for(let j=0; j<7; j++) {
@@ -54,7 +54,7 @@ export class BoardComponent implements OnInit {
 
   
   boardPredicate(drag: CdkDrag<Tile>, drop: CdkDropList<Tile[]>) {
-    return drop.data.length == 1
+    return drop.data[0].isEmpty == true
   }
 
   dicePredicate(drag: CdkDrag<Tile>, drop: CdkDropList<Tile[]>) {
@@ -76,11 +76,27 @@ export class BoardComponent implements OnInit {
     }
   }
 
+  sidesDice(tile:Tile) {
+    let index = this.dice.findIndex(e => e.id == tile.id)
+    let tile2: Tile = this.dice[index];
+    if (tile2) {
+      tile2 = sides(tile2);
+    }
+  }
+
   turnBoard(tile:Tile) {
     let index = this.freeSpace.findIndex(e => e[0].id == tile.id)
     let tile2: Tile = this.freeSpace[index][0];
     if (tile2) {
       tile2 = turn(tile2);
+    }
+  }
+
+  sidesBoard(tile:Tile) {
+    let index = this.freeSpace.findIndex(e => e[0].id == tile.id)
+    let tile2: Tile = this.freeSpace[index][0];
+    if (tile2) {
+      tile2 = sides(tile2);
     }
   }
 
@@ -92,42 +108,53 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  validOnBoard(toCheck: Tile[]): Tile[] {
-
-  let valid : Tile[] = [];
-  let invalid: Tile[] = [];
-
-    for(let tile of toCheck){
-      if (fitsWithEntry(tile) || fitsOnBoard(tile, this.placed)) valid.push(tile)
-      else invalid.push(tile)
+  sidesIntersection(tile:Tile) {
+    let index = this.intersections.findIndex(e => e.id == tile.id)
+    let tile2: Tile = this.intersections[index];
+    if (tile2) {
+      tile2 = sides(tile2);
     }
-
-    return valid.concat(validateBoard(invalid, valid)); 
   }
+
+  validOnBoard(toCheck: Tile[]): Tile[] {
+    let valid : Tile[] = [];
+    let invalid: Tile[] = [];
+
+      for(let tile of toCheck){
+        if (fitsWithEntry(tile) || fitsOnBoard(tile, this.placed)) valid.push(tile)
+        else invalid.push(tile)
+      }
+
+      return valid.concat(validateBoard(invalid, valid)); 
+    }
 
   validCheck(toCheck: Tile[]): boolean {
 
-    const newInterections = toCheck.filter(x => /intersection/.test(x.id))
-    if (newInterections.length > 1) {
-      this.freeSpace = this.freeSpace.filter(x => x.length == 1 || !/intersection/.test(x[0].id))
-      this.intersections.push(...newInterections)
-      return false;
-    }
+      const newInterections = toCheck.filter(x => /intersection/.test(x.id))
+      if (newInterections.length > 1) {
 
-    const valid = this.validOnBoard(toCheck);
-    
-    if  (toCheck.length == valid.length) {
-      return true;
-    } else {
-      const invalid = toCheck.filter(x => !valid.includes(x))
-      for (let t of this.freeSpace) {
-        if (invalid.includes(t[0])) {
-          this.dice.push(t[0])
-          t.shift()
+        for (let x of this.freeSpace) {
+          if (/intersection/.test(x[0].id)) x.shift(); 
         }
+        console.log(this.freeSpace)
+        this.intersections.push(...newInterections)
+        return false;
       }
-      return false;
-    }
+
+      const valid = this.validOnBoard(toCheck);
+      
+      if  (toCheck.length == valid.length) {
+        return true;
+      } else {
+        const invalid = toCheck.filter(x => !valid.includes(x))
+        for (let t of this.freeSpace) {
+          if (invalid.includes(t[0])) {
+            this.dice.push(t[0])
+            t.shift()
+          }
+        }
+        return false;
+      }
   }
 
   newRound() {

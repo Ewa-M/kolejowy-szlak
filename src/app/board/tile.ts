@@ -35,6 +35,28 @@ export const Intersections: Tile[] = [
 
 ]
 
+export function turn(tile: Tile) {
+  let firstroad = tile.road[3]
+      let firstrail = tile.rail[3]
+      for(let i = 2; i>=0; i--) {
+        tile.road[i+1] = tile.road[i];
+        tile.rail[i+1] = tile.rail[i];
+      }
+      tile.road[0] = firstroad;
+      tile.rail[0] = firstrail;
+    return tile;
+}
+
+export function sides(tile: Tile) {
+  let x = tile.road[1];
+  tile.road[1] = tile.road[3];
+  tile.road[3] = x;
+  x = tile.rail[1];
+  tile.rail[1] = tile.rail[3];
+  tile.rail[3] = x;
+  return tile;
+}
+
 export function connected(tile1: Tile, tile2: Tile): boolean {
   if(!(tile1.x && tile1.y && tile2.x && tile2.y)) return false;
 
@@ -47,18 +69,6 @@ export function connected(tile1: Tile, tile2: Tile): boolean {
     if (tile1.x == tile2.x + 1 && ((tile1.road[3] && tile2.road[1]) || (tile1.rail[3] && tile2.rail[1]))) return true;
   }
   return false;
-}
-
-export function turn(tile: Tile) {
-  let firstroad = tile.road[3]
-      let firstrail = tile.rail[3]
-      for(let i = 2; i>=0; i--) {
-        tile.road[i+1] = tile.road[i];
-        tile.rail[i+1] = tile.rail[i];
-      }
-      tile.road[0] = firstroad;
-      tile.rail[0] = firstrail;
-    return tile;
 }
 
 export function fitsOnBoard(tile: Tile, board: Tile[]): boolean {

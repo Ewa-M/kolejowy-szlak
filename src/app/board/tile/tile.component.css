@@ -10,7 +10,7 @@
     grid-template-areas: 
     ". upper ."
     "left middle right"
-    "turn lower ."
+    "turn lower sides"
     ;
     align-items: center;
     justify-items: center;
@@ -27,6 +27,10 @@
     color: var(--color);
     cursor: pointer;
     user-select: none;
+}
+
+.sides {
+    grid-area: sides;
 }
 
 .upper {grid-area: upper;}

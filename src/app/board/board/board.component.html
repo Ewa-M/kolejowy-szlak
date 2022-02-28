@@ -8,12 +8,15 @@
         [cdkDropListEnterPredicate]="intersectionsPredicate"
         class="side-panel"
         (cdkDropListDropped)="drop($event)">
+
         <app-tile  *ngFor="let tile  of intersections"  
             cdkDrag 
             [cdkDragData]="tile" 
             [tile]="tile" [color]="'blue'" 
             [cdkDragDisabled]="intersections.length < 4"
-            (turnTile)="turnIntersection(tile)"  ></app-tile>
+            (turnTile)="turnIntersection(tile)"  
+            (sidesTile)="sidesIntersection(tile)"
+        ></app-tile>
     </div>
 
     <div class="board">
@@ -51,7 +54,8 @@
                         [cdkDragData]="tile[0]" 
                         [cdkDragDisabled]="tile[0].isEmpty" 
                         [color]="'blue'" 
-                        (turnTile)="turnBoard(tile[0])"></app-tile>
+                        (turnTile)="turnBoard(tile[0])"
+                        (sidesTile)="sidesBoard(tile[0])"></app-tile>
             </div>
         </div>
 
@@ -63,8 +67,15 @@
         [cdkDropListData]="dice"
         [cdkDropListEnterPredicate]="dicePredicate"
         (cdkDropListDropped)="drop($event)">
-        <app-tile  *ngFor="let tile  of dice"  cdkDrag [cdkDragData]="tile" [tile]="tile" [color]="'blue'" (turnTile)="turnDice(tile)"  ></app-tile>
-
+        <app-tile  
+            *ngFor="let tile  of dice"  
+            cdkDrag 
+            [cdkDragData]="tile" 
+            [tile]="tile" 
+            [color]="'blue'" 
+            (turnTile)="turnDice(tile)"  
+            (sidesTile)="sidesDice(tile)"
+        ></app-tile>
 
         <button (click)="newRound()">FINISH ROUND</button>
     </div>
