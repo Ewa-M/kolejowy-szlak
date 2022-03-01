@@ -18,6 +18,6 @@
     <div *ngIf="tile.road[1]" class="right horizontal hroad"></div>
     <div *ngIf="tile.road[2]" class="lower vertical vroad"></div>
     <div *ngIf="tile.road[3]" class="left horizontal hroad"></div>
-    <div *ngIf="!tile.isEmpty" class="turn" (click)="turn()">⟳</div>
-    <div *ngIf="!tile.isEmpty" class="sides" (click)="sides()"><-></div>
+    <div *ngIf="!tile.isEmpty" class="turn btn" (click)="turn()">⟳</div>
+    <div *ngIf="!tile.isEmpty" class="sides btn" (click)="sides()">⇿</div>
 </div>

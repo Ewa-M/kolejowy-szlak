@@ -1,8 +1,15 @@
 szerokosc paskow: 0,15rem
 
-TODO: wiadukty :c zarowno wyswietlanie jak i oznaczenie
-TODO: dodawanie tylko jednego skrzyżowania na turę? nwm moze potem
-TODO: konczenie rundy
-    - guzik konczacy
-    - walidacja ukladu
-    - przeniesc dice do service'u
+TODO: wiadukty :c zarowno wyswietlanie (semi-zrobione) jak i oznaczenie (pole wiadukt?)
+TODO: component scoreboard
+TODO: sprawdzanie, czy dolozenie jest wgl mozliwe, bo sie blokuje
+TODO: więcej kometrzy by sie przydalo co co robi
+TODO: napis ktora runda (gdzie? => moze na panelu dice, u gory, nad guzikiem)
+TODO: tlo ladne, wykorzystujace przezroczystosc
+od czego lepiej zaczac? doprowadzil do stanu 100% uzywalnosci, czy punkty
+pomysl:
+1. uzywalnosc
+2.punkty
+3.ladnosc cz. 1
+4. pomoc?
+5. reszta
