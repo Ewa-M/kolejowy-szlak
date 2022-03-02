@@ -4,34 +4,34 @@ export interface Tile {
     //length = 4
     //0 = if up, rest clockwise
     id: string,
-    x?: number,
-    y?: number,
+    x: number,
+    y: number,
     isEmpty?: boolean
     middle?: string
 }
 
 export const normalDie : Tile[] = [
-  {road: [true, false, true, false], rail: [false, false, false, false], id: 'nd1'},
-  {road: [false, true, true, false], rail: [false, false, false, false], id: 'nd2'},
-  {road: [true, true, true, false], rail: [false, false, false, false], id: 'nd3'},
-  {rail: [true, false, true, false], road: [false, false, false, false], id: 'nd4'},
-  {rail: [false, true, true, false], road: [false, false, false, false], id: 'nd5'},
-  {rail: [true, true, true, false], road: [false, false, false, false], id: 'nd6'},
+  {road: [true, false, true, false], rail: [false, false, false, false], id: 'nd1', x: -1, y:-1},
+  {road: [false, true, true, false], rail: [false, false, false, false], id: 'nd2', x: -1, y:-1},
+  {road: [true, true, true, false], rail: [false, false, false, false], id: 'nd3', x: -1, y:-1},
+  {rail: [true, false, true, false], road: [false, false, false, false], id: 'nd4', x: -1, y:-1},
+  {rail: [false, true, true, false], road: [false, false, false, false], id: 'nd5', x: -1, y:-1},
+  {rail: [true, true, true, false], road: [false, false, false, false], id: 'nd6', x: -1, y:-1},
 ]
 
 export const specialDie: Tile[] = [
-  {road: [true, false, false, false], rail: [false, true, false, false], id: 'sd1'},
-  {road: [true, false, false, false], rail: [false, false, true, false], id: 'sd2'},
-  {road: [true, false, true, false], rail: [false, true, false, true], id: 'sd3', middle: 'vroad'},
+  {road: [true, false, false, false], rail: [false, true, false, false], id: 'sd1', x: -1, y:-1},
+  {road: [true, false, false, false], rail: [false, false, true, false], id: 'sd2', x: -1, y:-1},
+  {road: [true, false, true, false], rail: [false, true, false, true], id: 'sd3', middle: 'vroad', x: -1, y:-1},
 ]
 
 export const Intersections: Tile[] = [
-  {road: [true, true, false, true], rail: [false, false, true, false], id: 'intersection1'},
-  {road: [false, false, true, false], rail: [true, true, false, true], id: 'intersection2'},
-  {road: [true, true, true, true], rail: [false, false, false, false], id: 'intersection3'},
-  {road: [false, false, false, false], rail: [true, true, true, true], id: 'intersection4'},
-  {road: [true, false, false, true], rail: [false, true, true, false], id: 'intersection5'},
-  {road: [true, false, true, false], rail: [false, true, false, true], id: 'intersection6'},
+  {road: [true, true, false, true], rail: [false, false, true, false], id: 'intersection1', x: -1, y:-1},
+  {road: [false, false, true, false], rail: [true, true, false, true], id: 'intersection2', x: -1, y:-1},
+  {road: [true, true, true, true], rail: [false, false, false, false], id: 'intersection3', x: -1, y:-1},
+  {road: [false, false, false, false], rail: [true, true, true, true], id: 'intersection4', x: -1, y:-1},
+  {road: [true, false, false, true], rail: [false, true, true, false], id: 'intersection5', x: -1, y:-1},
+  {road: [true, false, true, false], rail: [false, true, false, true], id: 'intersection6', x: -1, y:-1},
 
 ]
 
@@ -114,5 +114,3 @@ export function validateBoard(tiles: Tile[], board: Tile[]): Tile[] {
   return valid.concat(validateBoard(invalid, valid));
 
 }
-
-

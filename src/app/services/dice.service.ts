@@ -16,7 +16,6 @@ export class DiceService {
     this.placed = this.placed.concat(tiles);
     this.subject.next(this.placed);
     this.round++;
-    //alert(this.round)
     if (this.round >6) {alert("game finished"); return [];}
     return this.throwDice();  
   }

@@ -15,6 +15,7 @@ export class BoardComponent implements OnInit {
   intersections: Tile[] = Intersections;
   placed: Tile[] = [];
   freeSpace: Tile[][] = [];
+  round: number = 1;
   diceSubscription: Subscription;
 
   constructor(private diceService: DiceService) { 
@@ -33,8 +34,8 @@ export class BoardComponent implements OnInit {
             road: [false, false, false, false],
             rail: [false, false, false, false],
             id: i +""+ j,
-            x: i+1,
-            y: j+1,
+            x: i,
+            y: j,
             isEmpty: true
           }]
         );}}
@@ -166,7 +167,8 @@ export class BoardComponent implements OnInit {
     if (this.dice.length == 0 && this.validCheck(toCheck)) {
       this.freeSpace = this.freeSpace.filter(x => x.length == 1)
       this.dice = this.diceService.throwDice();
-      this.diceService.finishRound(toCheck)
+      this.diceService.finishRound(toCheck);
+      this.round++;
     }
   }
 

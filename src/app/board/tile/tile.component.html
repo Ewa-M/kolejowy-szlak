@@ -8,7 +8,9 @@
         'vroad': tile.middle == 'hroad' || tile.middle == 'vroad',
         'mid-horizontal': tile.middle == 'hroad' || tile.middle == 'hrail'
     }"></div>
-    
+    {{ tile.x }}
+    {{ tile.y }}
+
     <div *ngIf="tile.rail[0]" class="upper vertical vrail"></div>
     <div *ngIf="tile.rail[1]" class="right horizontal hrail"></div>
     <div *ngIf="tile.rail[2]" class="lower vertical vrail"></div>

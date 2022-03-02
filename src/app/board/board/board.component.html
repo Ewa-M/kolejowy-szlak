@@ -37,6 +37,7 @@
         <div class="horizontal hrail h-right h-bottom"></div>
 
         <div class="main-board" >
+            <div class="middle"></div>
             <div *ngFor="let tile  of placed" 
                 [ngStyle]="{'grid-column': tile.x, 'grid-row': tile.y}">
                 <app-tile cdkDrag [tile]="tile" ></app-tile>
@@ -47,7 +48,7 @@
                 (cdkDropListDropped)="drop($event)"   
                 [cdkDropListData]="tile" 
                 [cdkDropListEnterPredicate]="boardPredicate"
-                [ngStyle]="{'grid-column': tile[0].x, 'grid-row': tile[0].y}" >
+                [ngStyle]="{'grid-column': tile[0].x+1, 'grid-row': tile[0].y+1}" >
                     <app-tile 
                         [tile]="tile[0]" 
                         cdkDrag 
@@ -67,6 +68,7 @@
         [cdkDropListData]="dice"
         [cdkDropListEnterPredicate]="dicePredicate"
         (cdkDropListDropped)="drop($event)">
+        {{ round }}
         <app-tile  
             *ngFor="let tile  of dice"  
             cdkDrag 

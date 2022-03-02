@@ -8,7 +8,7 @@ import { Tile } from '../tile';
   styleUrls: ['./tile.component.css']
 })
 export class TileComponent implements OnInit {
-@Input() tile: Tile = {rail: [], road: [], id: ""};
+@Input() tile: Tile = {rail: [], road: [], id: "", x: -1, y:-1};
 @Input() color: string ='black';
 @Output() turnTile: EventEmitter<Tile> = new EventEmitter();
 @Output() sidesTile: EventEmitter<Tile> = new EventEmitter();
