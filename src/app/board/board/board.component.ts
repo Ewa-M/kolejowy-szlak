@@ -137,7 +137,7 @@ export class BoardComponent implements OnInit {
         for (let x of this.freeSpace) {
           if (/intersection/.test(x[0].id)) x.shift(); 
         }
-        console.log(this.freeSpace)
+        //console.log(this.freeSpace)
         this.intersections.push(...newInterections)
         return false;
       }

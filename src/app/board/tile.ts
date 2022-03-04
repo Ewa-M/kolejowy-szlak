@@ -2,7 +2,7 @@ export interface Tile {
     rail: boolean[],
     road: boolean[],
     //length = 4
-    //0 = if up, rest clockwise
+    //0 = up, rest clockwise
     id: string,
     x: number,
     y: number,
@@ -11,10 +11,10 @@ export interface Tile {
 }
 
 export const normalDie : Tile[] = [
-  {road: [true, false, true, false], rail: [false, false, false, false], id: 'nd1', x: -1, y:-1},
+  {road: [true, false, true, false], rail: [false, false, false, false], id: 'nd1', x: -1, y:-1, middle: 'vroad'},
   {road: [false, true, true, false], rail: [false, false, false, false], id: 'nd2', x: -1, y:-1},
   {road: [true, true, true, false], rail: [false, false, false, false], id: 'nd3', x: -1, y:-1},
-  {rail: [true, false, true, false], road: [false, false, false, false], id: 'nd4', x: -1, y:-1},
+  {rail: [true, false, true, false], road: [false, false, false, false], id: 'nd4', x: -1, y:-1, middle: 'vrail'},
   {rail: [false, true, true, false], road: [false, false, false, false], id: 'nd5', x: -1, y:-1},
   {rail: [true, true, true, false], road: [false, false, false, false], id: 'nd6', x: -1, y:-1},
 ]
@@ -44,6 +44,10 @@ export function turn(tile: Tile) {
       }
       tile.road[0] = firstroad;
       tile.rail[0] = firstrail;
+    if (tile.middle) {
+      if (tile.middle[0] == 'h') tile.middle = tile.middle.replace(/h/, 'v')
+      else tile.middle = tile.middle.replace(/v/, 'h')
+    }
     return tile;
 }
 
@@ -58,18 +62,39 @@ export function sides(tile: Tile) {
 }
 
 export function connected(tile1: Tile, tile2: Tile): boolean {
-  if(!(tile1.x && tile1.y && tile2.x && tile2.y)) return false;
+  return connectedRail(tile1, tile2) || connectedRoad(tile1, tile2);
+}
+
+export function connectedRoad(tile1: Tile, tile2: Tile): boolean {
+  if(tile1.isEmpty==true || tile2.isEmpty==true) return false;
 
   if (tile1.x == tile2.x) {
-    if (tile1.y == tile2.y + 1 && ((tile1.road[0] && tile2.road[2]) || (tile1.rail[0] && tile2.rail[2]))) return true;
-    if (tile1.y == tile2.y - 1 && ((tile1.road[2] && tile2.road[0]) || (tile1.rail[2] && tile2.rail[0]))) return true;
+    if (tile1.y == tile2.y + 1 && tile1.road[0] && tile2.road[2]) return true;
+    if (tile1.y == tile2.y - 1 && tile1.road[2] && tile2.road[0]) return true;
   }
   if (tile1.y == tile2.y) {
-    if (tile1.x == tile2.x - 1 && ((tile1.road[1] && tile2.road[3]) || (tile1.rail[1] && tile2.rail[3]))) return true;
-    if (tile1.x == tile2.x + 1 && ((tile1.road[3] && tile2.road[1]) || (tile1.rail[3] && tile2.rail[1]))) return true;
+    if (tile1.x == tile2.x - 1 && tile1.road[1] && tile2.road[3]) return true;
+    if (tile1.x == tile2.x + 1 && tile1.road[3] && tile2.road[1]) return true;
   }
   return false;
 }
+
+export function connectedRail(tile1: Tile, tile2: Tile): boolean {
+  if(tile1.isEmpty==true || tile2.isEmpty==true) return false;
+
+
+  if (tile1.x == tile2.x) {
+    if (tile1.y == tile2.y + 1 && tile1.rail[0] && tile2.rail[2]) return true;
+    if (tile1.y == tile2.y - 1 && tile1.rail[2] && tile2.rail[0]) return true;
+  }
+  if (tile1.y == tile2.y) {
+    if (tile1.x == tile2.x - 1 && tile1.rail[1] && tile2.rail[3]) return true;
+    if (tile1.x == tile2.x + 1 && tile1.rail[3] && tile2.rail[1]) return true;
+  }
+  return false;  
+}
+
+
 
 export function fitsOnBoard(tile: Tile, board: Tile[]): boolean {
   for (const b of board) {
@@ -79,24 +104,24 @@ export function fitsOnBoard(tile: Tile, board: Tile[]): boolean {
 }
 
 export function fitsWithEntry(tile: Tile) {
-  if (tile.x == 2 || tile.x == 6) {
-    if(tile.y==1 && tile.road[0]) return true;
-    if(tile.y==7 && tile.road[2]) return true;
+  if (tile.x == 1 || tile.x == 5) {
+    if(tile.y==0 && tile.road[0]) return true;
+    if(tile.y==6 && tile.road[2]) return true;
   }
 
-  if (tile.x == 4) {
-    if(tile.y==1 && tile.rail[0]) return true;
-    if(tile.y==7 && tile.rail[2]) return true;
+  if (tile.x == 3) {
+    if(tile.y==0 && tile.rail[0]) return true;
+    if(tile.y==6 && tile.rail[2]) return true;
   }
 
-  if(tile.y == 2 || tile.y == 6) {
-    if(tile.x==1 && tile.rail[3]) return true;
-    if(tile.x==7 && tile.rail[1]) return true;
+  if(tile.y == 1 || tile.y == 5) {
+    if(tile.x==0 && tile.rail[3]) return true;
+    if(tile.x==6 && tile.rail[1]) return true;
   }
 
-  if(tile.y == 4) {
-    if(tile.x==1 && tile.road[3]) return true;
-    if(tile.x==7 && tile.road[1]) return true;
+  if(tile.y == 3) {
+    if(tile.x==0 && tile.road[3]) return true;
+    if(tile.x==6 && tile.road[1]) return true;
   }
 
  return false; 

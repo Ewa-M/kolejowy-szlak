@@ -39,7 +39,7 @@
         <div class="main-board" >
             <div class="middle"></div>
             <div *ngFor="let tile  of placed" 
-                [ngStyle]="{'grid-column': tile.x, 'grid-row': tile.y}">
+                [ngStyle]="{'grid-column': tile.x +1, 'grid-row': tile.y +1}">
                 <app-tile cdkDrag [tile]="tile" ></app-tile>
             </div>
     
@@ -48,7 +48,7 @@
                 (cdkDropListDropped)="drop($event)"   
                 [cdkDropListData]="tile" 
                 [cdkDropListEnterPredicate]="boardPredicate"
-                [ngStyle]="{'grid-column': tile[0].x+1, 'grid-row': tile[0].y+1}" >
+                [ngStyle]="{'grid-column': tile[0].x + 1, 'grid-row': tile[0].y + 1}" >
                     <app-tile 
                         [tile]="tile[0]" 
                         cdkDrag 
